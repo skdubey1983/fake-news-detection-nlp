@@ -1,0 +1,19 @@
+# Virtual Environment
+venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Trained Models
+models/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code settings (optional)
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
