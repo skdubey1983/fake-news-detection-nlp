@@ -196,6 +196,15 @@ Top Suspicious Words:
 * heart
 * day
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/home_dashboard.png)
+
+### Fake News Prediction
+
+![Fake Prediction](screenshots/fake_prediction.png)
 ---
 
 ## Future Enhancements
