@@ -45,16 +45,23 @@ def clean_text(text):
 
 def load_online_dataset():
     dataset = load_dataset("davanstrien/WELFake")
-
     df = dataset["train"].to_pandas()
 
-    print("Dataset columns:", df.columns)
-    print("Dataset shape:", df.shape)
+    print("\nDataset columns:")
+    print(df.columns)
+
+    print("\nDataset shape:")
+    print(df.shape)
+
+    print("\nLabel counts:")
+    print(df["label"].value_counts())
+
+    print("\nFirst 5 rows:")
+    print(df.head())
 
     df = df.dropna()
 
     df["content"] = df["title"].astype(str) + " " + df["text"].astype(str)
-
     df["content"] = df["content"].apply(clean_text)
 
     return df["content"], df["label"]
@@ -82,10 +89,14 @@ def train():
         ))
     ])
 
+    print("\nTraining started...")
     model.fit(X_train, y_train)
+    print("Training completed.")
 
     y_pred = model.predict(X_test)
 
+    print("\nModel Evaluation")
+    print("----------------")
     print("Accuracy :", accuracy_score(y_test, y_pred))
     print("Precision:", precision_score(y_test, y_pred))
     print("Recall   :", recall_score(y_test, y_pred))
@@ -94,6 +105,9 @@ def train():
     print("\nClassification Report:")
     print(classification_report(y_test, y_pred))
 
+    print("\nModel classes:")
+    print(model.named_steps["classifier"].classes_)
+
     cm = confusion_matrix(y_test, y_pred)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
     disp.plot()
@@ -101,7 +115,7 @@ def train():
     plt.show()
 
     joblib.dump(model, MODEL_PATH)
-    print("Model saved at:", MODEL_PATH)
+    print("\nModel saved at:", MODEL_PATH)
 
 
 if __name__ == "__main__":
