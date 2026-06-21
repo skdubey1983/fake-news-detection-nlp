@@ -1,0 +1,4 @@
+Dataset,Model,Accuracy (%),Precision (%),Recall (%),F1 Score (%),Total Samples,Train Samples,Test Samples
+WELFake,TF-IDF + Logistic Regression,95.07,94.54,95.86,95.2,71537,57229,14308
+LIAR,TF-IDF + Logistic Regression,61.39,55.89,60.34,58.03,12791,10232,2559
+Kaggle Fake Real,TF-IDF + Logistic Regression,98.98,99.4,98.64,99.02,44898,35918,8980
