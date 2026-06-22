@@ -1,28 +1,25 @@
-# Fake News Detection using NLP
+# Fake News Detection using NLP and Machine Learning
 
 ## Overview
 
-This project detects whether a news article or headline is **Fake News** or **Real News** using Natural Language Processing (NLP) and Machine Learning.
+This project presents an intelligent Fake News Detection System developed using Natural Language Processing (NLP) and Machine Learning techniques. The system automatically classifies textual news content as **Fake News** or **Real News** and provides explainable predictions through confidence analysis, suspicious keyword detection, and category identification.
 
-The system uses:
-
-* TF-IDF Vectorization
-* Logistic Regression Classifier
-* Text Preprocessing
-* Explainable Predictions
-* Streamlit Interactive Dashboard
+The project was developed as part of an AI/ML training and research initiative and evaluated using multiple benchmark fake news datasets.
 
 ---
 
-## Features
+## Key Features
 
 ### Fake News Detection
 
-Predicts whether a news article is Fake or Real.
+Classifies news articles and statements into:
 
-### Confidence Score
+* Real News
+* Fake News
 
-Displays confidence percentage for the prediction.
+### Confidence Score Estimation
+
+Displays prediction confidence using class probabilities.
 
 ### News Category Detection
 
@@ -31,37 +28,44 @@ Automatically identifies categories such as:
 * Politics
 * Health
 * Technology
+* Business
 * Finance
 * Sports
+* Science
 
-### Explainable AI
+### Explainable AI Features
 
-Displays top suspicious words contributing to fake news prediction.
+Highlights suspicious words that may contribute to misinformation detection.
 
 ### Analytics Dashboard
 
-Tracks:
+Provides:
 
 * Total Predictions
 * Fake News Count
 * Real News Count
 * Average Confidence Score
 
+### Multi-Dataset Evaluation
+
+Evaluated using:
+
+* WELFake Dataset
+* LIAR Dataset
+* Kaggle Fake and Real News Dataset
+
 ---
 
-## Dataset
+## Datasets Used
 
-Dataset Used:
-
-WELFake Dataset
+### 1. WELFake Dataset
 
 Source:
-
 https://huggingface.co/datasets/davanstrien/WELFake
 
-Dataset Size:
+Statistics:
 
-* Total Articles: 72,134
+* Total Samples: 72,134
 * Fake News: 37,106
 * Real News: 35,028
 
@@ -72,35 +76,93 @@ Label Mapping:
 
 ---
 
+### 2. LIAR Dataset
+
+Source:
+https://www.cs.ucsb.edu/~william/data/liar_dataset.zip
+
+Statistics:
+
+* Total Samples: 12,791
+* Political Statements
+* Six Original Credibility Labels
+
+Binary Mapping Used:
+
+* Real = true, mostly-true, half-true
+* Fake = barely-true, false, pants-fire
+
+---
+
+### 3. Kaggle Fake and Real News Dataset
+
+Statistics:
+
+* Total Samples: 44,898
+* Fake News: 23,481
+* Real News: 21,417
+
+Files:
+
+* Fake.csv
+* True.csv
+
+---
+
 ## Machine Learning Pipeline
 
-News Text
+News Article
+
 ↓
+
 Text Cleaning
+
 ↓
+
 Stopword Removal
+
 ↓
+
 TF-IDF Vectorization
+
 ↓
-Logistic Regression
+
+Logistic Regression Classifier
+
 ↓
+
 Prediction
+
 ↓
-Confidence Score
+
+Confidence Analysis
+
+↓
+
+Category Detection
+
+↓
+
+Explainability Output
 
 ---
 
 ## Model Performance
 
-### Evaluation Results
+### Experimental Results
 
-Accuracy: 95.43%
+| Dataset          | Accuracy | Precision | Recall | F1 Score |
+| ---------------- | -------- | --------- | ------ | -------- |
+| WELFake          | 95.07%   | 94.54%    | 95.86% | 95.20%   |
+| LIAR             | 61.39%   | 55.89%    | 60.34% | 58.03%   |
+| Kaggle Fake Real | 98.98%   | 99.40%    | 98.64% | 99.02%   |
 
-Precision: 95.07%
+### Observations
 
-Recall: 96.04%
-
-F1 Score: 95.55%
+* Highest accuracy achieved on Kaggle Fake and Real News Dataset.
+* Strong performance observed on WELFake dataset.
+* Lower performance on LIAR dataset due to short political statements and limited contextual information.
+* Demonstrates robustness across multiple fake news benchmarks.
 
 ---
 
@@ -120,23 +182,29 @@ F1 Score: 95.55%
 
 ## Project Structure
 
+```text
 fake-news-detection-nlp/
 
 ├── data/
-
+│   ├── LIAR_dataset/
+│   ├── Fake.csv
+│   └── True.csv
+│
 ├── models/
-
-│ └── fake_news_model.pkl
-
+│   └── fake_news_model.pkl
+│
+├── results/
+│   ├── dataset_comparison_results.csv
+│   ├── confusion_matrix_welfake.png
+│   ├── confusion_matrix_liar.png
+│   └── confusion_matrix_kaggle_fake_real.png
+│
 ├── train_model.py
-
 ├── app.py
-
 ├── requirements.txt
-
 ├── README.md
-
 └── .gitignore
+```
 
 ---
 
@@ -144,81 +212,110 @@ fake-news-detection-nlp/
 
 ### Clone Repository
 
+```bash
 git clone https://github.com/skdubey1983/fake-news-detection-nlp.git
 
 cd fake-news-detection-nlp
+```
 
 ### Create Virtual Environment
 
+```bash
 python -m venv venv
+```
 
 ### Activate Environment
 
-Windows
+Windows:
 
+```bash
 venv\Scripts\activate
+```
 
 ### Install Dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
 ---
 
 ## Train Model
 
+```bash
 python train_model.py
+```
+
+Outputs generated:
+
+* Trained Model
+* Dataset Comparison Report
+* Confusion Matrices
 
 ---
 
 ## Run Application
 
+```bash
 streamlit run app.py
+```
 
 ---
 
 ## Example Prediction
 
-Input:
+### Input
 
 Scientists discover a magical leaf that instantly cures cancer, diabetes, and heart disease in one day.
 
-Output:
+### Output
 
 Prediction: FAKE NEWS
 
-Confidence: 86.25%
+Fake Probability: 86.25%
 
-Category: Health
+Real Probability: 13.75%
 
-Top Suspicious Words:
+Confidence Level: High Confidence
+
+Detected Category: Health
+
+Suspicious Words:
 
 * disease
 * heart
 * day
 
-## Screenshots
-
-### Dashboard
-
-![Dashboard](screenshots/home_dashboard.png)
-
-### Fake News Prediction
-
-![Fake Prediction](screenshots/fake_prediction.png)
 ---
 
 ## Future Enhancements
 
-* BERT Based Fake News Detection
-* Real-Time News API Integration
-* Multilingual News Detection
-* Explainable AI Dashboard
+* BERT-based Fake News Detection
+* RoBERTa and Transformer Models
+* Large Language Model Integration
+* Real-Time News Verification APIs
+* Multilingual Fake News Detection
+* Multimodal Analysis (Text + Image + Video)
+* SHAP/LIME Explainable AI
 * Cloud Deployment
 
 ---
 
-## Author
+## GitHub Repository
 
-Shiv Kishan Dubey and Sri Nath Dwivedi
-(Industry Training - ASDL group)
-AI/ML Project- Fake News Detection using NLP and Machine Learning
+Repository:
+https://github.com/skdubey1983/fake-news-detection-nlp
+
+---
+
+## Authors
+
+**Shiv Kishan Dubey**
+
+AI/ML Project – Fake News Detection using NLP and Machine Learning
+
+Developed during Industry Training under ASDL Group.
+
+## License
+
+This project is intended for educational, academic, and research purposes.
