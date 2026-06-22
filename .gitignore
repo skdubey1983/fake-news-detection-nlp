@@ -14,6 +14,8 @@ models/
 # VS Code settings (optional)
 .vscode/
 
+data/
+
 # OS files
 .DS_Store
 Thumbs.db
