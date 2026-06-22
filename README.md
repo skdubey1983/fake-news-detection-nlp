@@ -310,7 +310,7 @@ https://github.com/skdubey1983/fake-news-detection-nlp
 
 ## Authors
 
-**Shiv Kishan Dubey**
+**Shiv Kishan Dubey and Sri Nath Dwivedi**
 
 AI/ML Project – Fake News Detection using NLP and Machine Learning
 
