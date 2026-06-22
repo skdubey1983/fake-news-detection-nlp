@@ -18,7 +18,7 @@ CATEGORY_KEYWORDS = {
     ],
     "Health": [
         "doctor", "health", "cancer", "diabetes", "medicine", "hospital",
-        "vaccine", "virus", "disease", "cure"
+        "vaccine", "virus", "disease", "cure", "corona", "pandemic"
     ],
     "Technology": [
         "technology", "ai", "artificial intelligence", "software", "computer",
@@ -37,8 +37,8 @@ CATEGORY_KEYWORDS = {
 
 def clean_text(text):
     text = str(text).lower()
-    text = re.sub(r"http\S+|www\S+", "", text)
-    text = re.sub(r"[^a-zA-Z\s]", "", text)
+    text = re.sub(r"http\S+|www\S+", " ", text)
+    text = re.sub(r"[^a-zA-Z\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
 
     words = text.split()
@@ -59,9 +59,6 @@ def predict_news(news_text):
     prediction = model.predict([cleaned_text])[0]
     probability = model.predict_proba([cleaned_text])[0]
 
-    # WELFake label mapping:
-    # 0 = Real
-    # 1 = Fake
     real_prob = probability[0]
     fake_prob = probability[1]
 
@@ -73,20 +70,15 @@ def get_confidence_level(confidence):
         return "High Confidence"
     elif confidence >= 0.70:
         return "Medium Confidence"
-    else:
-        return "Low Confidence"
+    return "Low Confidence"
 
 
 def detect_category(text):
     text = text.lower()
-
     category_scores = {}
 
     for category, keywords in CATEGORY_KEYWORDS.items():
-        score = 0
-        for keyword in keywords:
-            if keyword in text:
-                score += 1
+        score = sum(1 for keyword in keywords if keyword in text)
         category_scores[category] = score
 
     best_category = max(category_scores, key=category_scores.get)
@@ -108,10 +100,9 @@ def get_top_suspicious_words(cleaned_text, top_n=8):
 
     word_score_map = dict(zip(feature_names, coefficients))
 
-    words = cleaned_text.split()
     suspicious_words = []
 
-    for word in words:
+    for word in cleaned_text.split():
         if word in word_score_map:
             score = word_score_map[word]
             if score > 0:
@@ -132,6 +123,24 @@ def get_top_suspicious_words(cleaned_text, top_n=8):
             seen.add(word)
 
     return unique_words[:top_n]
+
+
+def show_dashboard():
+    st.subheader("📊 Prediction Dashboard")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    avg_confidence = 0
+    if st.session_state.total_predictions > 0:
+        avg_confidence = (
+            st.session_state.confidence_sum /
+            st.session_state.total_predictions
+        )
+
+    col1.metric("Total", st.session_state.total_predictions)
+    col2.metric("Fake", st.session_state.fake_count)
+    col3.metric("Real", st.session_state.real_count)
+    col4.metric("Avg Confidence", f"{avg_confidence * 100:.2f}%")
 
 
 if "total_predictions" not in st.session_state:
@@ -156,23 +165,7 @@ st.set_page_config(
 st.title("📰 Fake News Detection using NLP")
 st.write("This app predicts whether a news headline/article is Fake or Real.")
 
-st.divider()
-
-st.subheader("📊 Prediction Dashboard")
-
-col1, col2, col3, col4 = st.columns(4)
-
-avg_confidence = 0
-if st.session_state.total_predictions > 0:
-    avg_confidence = (
-        st.session_state.confidence_sum /
-        st.session_state.total_predictions
-    )
-
-col1.metric("Total", st.session_state.total_predictions)
-col2.metric("Fake", st.session_state.fake_count)
-col3.metric("Real", st.session_state.real_count)
-col4.metric("Avg Confidence", f"{avg_confidence * 100:.2f}%")
+show_debug = st.sidebar.checkbox("Show Debug Information", value=False)
 
 st.divider()
 
@@ -220,8 +213,12 @@ if st.button("Check News"):
             for word, score in suspicious_words:
                 st.write(f"• {word}")
 
-        with st.expander("Debug Information"):
-            st.write("Raw Prediction:", int(prediction))
-            st.write("Raw Probabilities:", probability)
-            st.write("Label Mapping: 0 = Real, 1 = Fake")
-            st.write("Cleaned Text:", cleaned_text)
+        if show_debug:
+            with st.expander("Debug Information"):
+                st.write("Raw Prediction:", int(prediction))
+                st.write("Raw Probabilities:", probability)
+                st.write("Label Mapping: 0 = Real, 1 = Fake")
+                st.write("Cleaned Text:", cleaned_text)
+
+st.divider()
+show_dashboard()
